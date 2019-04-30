@@ -18,6 +18,7 @@
 // Author:  John Gauch
 // Date:    Spring 2019
 //---------------------------------------
+#include <vector>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,12 +63,17 @@ void ray_trace()
     color.set(200,0,100);
     shader.SetObject(color, 0.3, 0.4, 0.4, 10);
     
+    // generate a bunch of spheres of various sizes
+    for(int i = 0; i < 50 ; i++)
+    {
+        // make a vector of spheres
+    }
     // Define test sphere
     Sphere3D sphere;
     Point3D center;
-    center.set(0,0,3);
+    center.set(0,0,3); // set the position of the sphere in 3D space
     float radius = 2;
-    sphere.set(center, radius);
+    sphere.set(center, radius); // set dimensions of sphere
     
     // Perform ray tracing
     for (int y = 0; y < YDIM; y++)
