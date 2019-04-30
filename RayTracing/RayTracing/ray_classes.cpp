@@ -14,16 +14,16 @@
 //    they should be used with care (since there
 //    is no data hiding provided).
 //
-// Author:  John Gauch
+// Author:  John  Gauch
 // Date:    Spring 2019
 //----------------------------------------------
 #include "ray_classes.h"
 
+const bool DEBUG = false;
 void ColorRGB::set(float r, float g, float b)
 {
     R = r;
-    G = g;
-    B = b;
+    G = g; 
     clamp();
 }
 

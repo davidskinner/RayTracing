@@ -24,7 +24,7 @@ using namespace std;
 #ifndef _RAY_CLASSES_
 #define _RAY_CLASSES_
 
-//const bool DEBUG = false;
+//bool DEBUG = false;
 
 //----------------------------------------------
 class ColorRGB
