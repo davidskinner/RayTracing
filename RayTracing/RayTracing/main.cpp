@@ -63,6 +63,10 @@ vector<SphereObject> sphereList;
 // Init function for OpenGL
 //---------------------------------------
 
+float myrand(float R)
+{
+    return (2 * R * rand()) / RAND_MAX - R;
+}
 
 void ray_trace()
 {
@@ -86,12 +90,10 @@ void ray_trace()
     color.set(200,0,100);
     shader.SetObject(color, 0.3, 0.4, 0.4, 10);
     
-    
-    
     // generate a bunch of spheres of various sizes
-    for(int i = 0; i < 1 ; i++)
+    for(int i = 0; i < 100 ; i++)
     {
-        SphereObject temp = SphereObject(0,0,3,2);
+        SphereObject temp = SphereObject(myrand(2.2),myrand(2.2),myrand(1)+3,myrand(.45)+.15);
         sphereList.push_back(temp);
     }
 
