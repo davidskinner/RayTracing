@@ -98,17 +98,21 @@ void ray_trace()
     color.set(200,0,100);
     
     // generate a bunch of spheres of various sizes
-    for(int i = 0; i < 50 ; i++)
+    for(int i = 0; i < 11 ; i++)
     {
         SphereObject temp = SphereObject(myrand(2.2),myrand(2.2),myrand(1)+3,myrand(.7)+.15);
         sphereList.push_back(temp);
     }
+    
+    // Perform sphere intersection
+    Point3D p;
+    Vector3D n;
+    
 
     // Perform ray tracing
     for (int y = 0; y < YDIM; y++)
         for (int x = 0; x < XDIM; x++)
         {
-            
             // Clear image
             image[y][x][0] = 0;
             image[y][x][1] = 0;
@@ -119,21 +123,47 @@ void ray_trace()
             float ypos = (y - YDIM/2) * 2.0 / YDIM;
             Point3D point;
             point.set(xpos, ypos, 0);
+            float theClosestDistanceToThePoint = 100000000;
             
             // Define ray from camera through image
             Ray3D ray;
             ray.set(camera, point);
             
-            // Perform sphere intersection
-            Point3D p;
-            Vector3D n;
+            // Define a ray from a point(x,y,z) to the light source(x,y,z)
+            Point3D lightPoint;
+            lightPoint.set(-1,-1,-1);
+            
+
+            int index =0;
+            
             
             for (int i = 0; i < sphereList.size(); i++)
             {
-                shader.SetObject(sphereList.at(i).color, 0.3, 0.4, 0.4, 10);
-
-                if (sphereList.at(i).sphere.get_intersection(ray, p, n))
+                if(sphereList.at(i).sphere.get_intersection(ray, p, n))
                 {
+                    if(point.distance(p) < theClosestDistanceToThePoint)
+                    {
+                        theClosestDistanceToThePoint = point.distance(p);
+                        index = i;
+                    }
+                }
+            }
+            
+            shader.SetObject(sphereList.at(index).color, 0.3, 0.4, 0.4, 10);
+
+
+            if(sphereList.at(index).sphere.get_intersection(ray, p, n))
+            {
+                Ray3D rayToLight;
+                rayToLight.set(p, dir);
+                
+                for (int i = 0 ; i < sphereList.size(); i++) {
+                    if(index != i && sphereList.at(i).sphere.get_intersection(rayToLight, p, n))
+                    {
+                    shader.SetObject(sphereList.at(index).color, 0.3, 0,0,0);
+                    }
+                }
+
                     // Display surface normal
                     if (mode == "normal")
                     {
@@ -145,12 +175,12 @@ void ray_trace()
                     // Calculate Phong shade
                     if (mode == "phong")
                     {
-                        shader.GetShade(p, n, color);
-                        image[y][x][0] = color.R;
-                        image[y][x][1] = color.G;
-                        image[y][x][2] = color.B;
+                        ColorRGB theColor = sphereList.at(index).color;
+                        shader.GetShade(p, n, theColor);
+                        image[y][x][0] = theColor.R;
+                        image[y][x][1] = theColor.G;
+                        image[y][x][2] = theColor.B;
                     }
-                }
             }
         }
 }
