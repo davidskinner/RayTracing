@@ -31,18 +31,24 @@
 // Include ray tracing and phong shading code
 #include "ray_classes.h"
 
+float myrand(float R)
+{
+    return (2 * R * rand()) / RAND_MAX - R;
+}
+
 class SphereObject
 {
 public:
     Sphere3D sphere;
     Point3D center;
+    ColorRGB color;
     
     SphereObject(float x, float y, float z, float radius)
     {
         this->center.set(x, y, z);
         this->sphere.set(this->center, radius);
+        this->color.set(myrand(120)+100,myrand(140)+100,myrand(130)+100);
     }
-    
 };
 
 void ColorRGB::set(float r, float g, float b)
@@ -63,10 +69,7 @@ vector<SphereObject> sphereList;
 // Init function for OpenGL
 //---------------------------------------
 
-float myrand(float R)
-{
-    return (2 * R * rand()) / RAND_MAX - R;
-}
+
 
 void ray_trace()
 {
@@ -88,12 +91,11 @@ void ray_trace()
     
     // Set object properties
     color.set(200,0,100);
-    shader.SetObject(color, 0.3, 0.4, 0.4, 10);
     
     // generate a bunch of spheres of various sizes
-    for(int i = 0; i < 100 ; i++)
+    for(int i = 0; i < 50 ; i++)
     {
-        SphereObject temp = SphereObject(myrand(2.2),myrand(2.2),myrand(1)+3,myrand(.45)+.15);
+        SphereObject temp = SphereObject(myrand(2.2),myrand(2.2),myrand(1)+3,myrand(.7)+.15);
         sphereList.push_back(temp);
     }
 
@@ -101,6 +103,7 @@ void ray_trace()
     for (int y = 0; y < YDIM; y++)
         for (int x = 0; x < XDIM; x++)
         {
+            
             // Clear image
             image[y][x][0] = 0;
             image[y][x][1] = 0;
@@ -122,7 +125,8 @@ void ray_trace()
             
             for (int i = 0; i < sphereList.size(); i++)
             {
-                // if (sVector[i].get_intersection(ray,p,n))??
+                shader.SetObject(sphereList.at(i).color, 0.3, 0.4, 0.4, 10);
+
                 if (sphereList.at(i).sphere.get_intersection(ray, p, n))
                 {
                     // Display surface normal
@@ -155,12 +159,12 @@ void init()
     glClearColor(0.0, 0.0, 0.0, 1.0);
     
     // Print command menu
-    cout << "Program commands:\n"
-    << "   '+' - increase camera distance\n"
-    << "   '-' - decrease camera distance\n"
-    << "   'p' - show Phong shading\n"
-    << "   'n' - show surface normals\n"
-    << "   'q' - quit program\n";
+//    cout << "Program commands:\n"
+//    << "   '+' - increase camera distance\n"
+//    << "   '-' - decrease camera distance\n"
+//    << "   'p' - show Phong shading\n"
+//    << "   'n' - show surface normals\n"
+//    << "   'q' - quit program\n";
     
     // Perform ray tracing
     ray_trace();
