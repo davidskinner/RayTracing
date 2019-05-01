@@ -31,16 +31,39 @@
 // Include ray tracing and phong shading code
 #include "ray_classes.h"
 
+class SphereObject
+{
+public:
+    Sphere3D sphere;
+    Point3D center;
+    
+    SphereObject(float x, float y, float z, float radius)
+    {
+        this->center.set(x, y, z);
+        this->sphere.set(this->center, radius);
+    }
+    
+};
+
+void ColorRGB::set(float r, float g, float b)
+{
+    R = r;
+    G = g;
+    clamp();
+}
+
 // Global variables
 #define XDIM 800
 #define YDIM 800
 unsigned char image[YDIM][XDIM][3];
 float position = 2;
 string mode = "phong";
-
+vector<SphereObject> sphereList;
 //---------------------------------------
 // Init function for OpenGL
 //---------------------------------------
+
+
 void ray_trace()
 {
     // Define Phong shader
@@ -63,18 +86,15 @@ void ray_trace()
     color.set(200,0,100);
     shader.SetObject(color, 0.3, 0.4, 0.4, 10);
     
-    // generate a bunch of spheres of various sizes
-    for(int i = 0; i < 50 ; i++)
-    {
-        // make a vector of spheres
-    }
-    // Define test sphere
-    Sphere3D sphere;
-    Point3D center;
-    center.set(0,0,3); // set the position of the sphere in 3D space
-    float radius = 2;
-    sphere.set(center, radius); // set dimensions of sphere
     
+    
+    // generate a bunch of spheres of various sizes
+    for(int i = 0; i < 1 ; i++)
+    {
+        SphereObject temp = SphereObject(0,0,3,2);
+        sphereList.push_back(temp);
+    }
+
     // Perform ray tracing
     for (int y = 0; y < YDIM; y++)
         for (int x = 0; x < XDIM; x++)
@@ -97,23 +117,28 @@ void ray_trace()
             // Perform sphere intersection
             Point3D p;
             Vector3D n;
-            if (sphere.get_intersection(ray, p, n))
+            
+            for (int i = 0; i < sphereList.size(); i++)
             {
-                // Display surface normal
-                if (mode == "normal")
+                // if (sVector[i].get_intersection(ray,p,n))??
+                if (sphereList.at(i).sphere.get_intersection(ray, p, n))
                 {
-                    image[y][x][0] = 127 + n.vx * 127;
-                    image[y][x][1] = 127 + n.vy * 127;
-                    image[y][x][2] = 127 + n.vz * 127;
-                }
-                
-                // Calculate Phong shade
-                if (mode == "phong")
-                {
-                    shader.GetShade(p, n, color);
-                    image[y][x][0] = color.R;
-                    image[y][x][1] = color.G;
-                    image[y][x][2] = color.B;
+                    // Display surface normal
+                    if (mode == "normal")
+                    {
+                        image[y][x][0] = 127 + n.vx * 127;
+                        image[y][x][1] = 127 + n.vy * 127;
+                        image[y][x][2] = 127 + n.vz * 127;
+                    }
+                    
+                    // Calculate Phong shade
+                    if (mode == "phong")
+                    {
+                        shader.GetShade(p, n, color);
+                        image[y][x][0] = color.R;
+                        image[y][x][1] = color.G;
+                        image[y][x][2] = color.B;
+                    }
                 }
             }
         }

@@ -26,6 +26,8 @@ using namespace std;
 
 //bool DEBUG = false;
 
+
+
 //----------------------------------------------
 class ColorRGB
 {
@@ -120,5 +122,4 @@ private:
     ColorRGB ObjectColor;
     float Ka, Kd, Ks, Kp;
 };
-
 #endif

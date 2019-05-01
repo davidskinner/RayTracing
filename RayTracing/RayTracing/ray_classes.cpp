@@ -20,12 +20,8 @@
 #include "ray_classes.h"
 
 const bool DEBUG = false;
-void ColorRGB::set(float r, float g, float b)
-{
-    R = r;
-    G = g; 
-    clamp();
-}
+
+
 
 //----------------------------------------------
 string ColorRGB::print()
