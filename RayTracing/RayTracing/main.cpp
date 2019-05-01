@@ -18,8 +18,11 @@
 // Author:  John Gauch
 // Date:    Spring 2019
 //---------------------------------------
+#include <random>
+#include <ctime>
 #include <vector>
 #include <math.h>
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef MAC
@@ -33,6 +36,7 @@
 
 float myrand(float R)
 {
+    
     return (2 * R * rand()) / RAND_MAX - R;
 }
 
@@ -47,7 +51,7 @@ public:
     {
         this->center.set(x, y, z);
         this->sphere.set(this->center, radius);
-        this->color.set(myrand(120)+100,myrand(140)+100,myrand(130)+100);
+        this->color.set(myrand(150)+100,myrand(100)+100,myrand(100)+100);
     }
 };
 
@@ -55,6 +59,7 @@ void ColorRGB::set(float r, float g, float b)
 {
     R = r;
     G = g;
+    B = b;
     clamp();
 }
 
@@ -83,7 +88,7 @@ void ray_trace()
     
     // Define light source
     ColorRGB color;
-    color.set(200,200,200);
+    color.set(255,255,255);
     Vector3D dir;
     dir.set(-1,-1,-1);
     dir.normalize();
